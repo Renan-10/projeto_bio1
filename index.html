@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <div class="form-group">
+            <label for="login">Login:</label>
+            <input type="text" id="login" placeholder="Digite seu usuario" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Digite sua senha" required>
+        </div>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <script>
+        async function login() {
+            var login = document.getElementById('login').value;
+            var password = document.getElementById('password').value;
+
+            // Configurar dados do payload
+            var data = {
+                login: login,
+                password: password
+            };
+
+            try {
+                // Enviar solicitação de autenticação para a API
+                var response = await fetch('https://biomedicina-production.up.railway.app/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Autenticação bem-sucedida, obter os dados do usuário
+                    var userData = await response.json();
+
+                    // Redirecionar para a página de dashboard com os dados do usuário
+                    window.location.href = 'dashboard.html?login=' + login + '&name=' + userData.name + '&email=' + userData.email;
+                } else {
+                    // Autenticação falhou
+                    alert('Usuario ou Senha errada!');
+                }
+            } catch (error) {
+                console.error('Error during authentication:', error);
+            }
+        }
+    </script>
+</body>
+</html>

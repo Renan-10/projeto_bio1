@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .dashboard-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        #procedureModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+}
+
+        #modalContent {
+            border: 1px solid red;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px; /* Ajuste o tamanho conforme necessário */
+            text-align: center;
+        }
+
+        input {
+            width: 100%; /* Ocupa 100% da largura disponível */
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>Agendamentos</h2>
+        <p><span id="login"></span></p>
+        
+        <div id="userData"></div>
+        <table id="agendaTable"></table>
+        <p><a href="index.html">Logout</a></p>
+
+        <div id="procedureModal" class="modal">
+            <div id="modalContent" class="modal-content"></div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+        <script>
+            async function loadUserData() {
+                var urlParams = new URLSearchParams(window.location.search);
+                var login = urlParams.get('login');
+                var userDataResponse = await fetch(`https://biomedicina-production.up.railway.app/user/login/${login}`);
+                var userData = await userDataResponse.json();
+                var userId = userData.id;
+                var userLogin = userData.login;
+                var userCons = userData.cons;
+
+                document.getElementById('userData').innerHTML = `
+                    <p>Profissional: ${userLogin}</p>
+                    <p>Conselho: ${userCons}</p>
+                `;
+
+                var agendaResponse = await fetch(`https://biomedicina-production.up.railway.app/agenda/byUser/${userId}`);
+                var agendaData = await agendaResponse.json();
+
+                displayAgendaTable(agendaData);
+            }
+
+            function displayAgendaTable(agendaData) {
+                var table = document.getElementById('agendaTable');
+                
+                var headerRow = table.insertRow(0);
+                var headerLabels = ['Data Consulta', 'Descrição Procedimento', 'Nome do Paciente', 'Ações'];
+                for (var i = 0; i < headerLabels.length; i++) {
+                    var th = document.createElement('th');
+                    th.textContent = headerLabels[i];
+                    headerRow.appendChild(th);
+                }
+
+                for (var i = 0; i < agendaData.length; i++) {
+                    var row = table.insertRow(i + 1);
+                    var cellDataConsulta = row.insertCell(0);
+                    var cellDescProced = row.insertCell(1);
+                    var cellNomePac = row.insertCell(2);
+                    var cellActions = row.insertCell(3);
+
+                    var dataConsulta = new Date(agendaData[i].dataConsulta).toLocaleDateString();
+                    var descProced = agendaData[i].procedimentos.descProced;
+                    var nomePac = agendaData[i].paciente.nomepac;
+                    var cpfpac = agendaData[i].paciente.cpfpac;
+
+                    cellDataConsulta.textContent = dataConsulta;
+                    cellDescProced.textContent = descProced;
+                    cellNomePac.textContent = nomePac;
+
+                    var performButton = document.createElement('button');
+                    performButton.textContent = 'Perform Procedure';
+                    performButton.onclick = (function(nPac, cPac, dProced) {
+                        return function() {
+                            openProcedurePopup(nPac, cPac, dProced);
+                        };
+                    })(nomePac, cpfpac, descProced);
+
+                    cellActions.appendChild(performButton);
+                }
+            }
+
+            function openProcedurePopup(nomePac, cpfpac, descProced) {
+                var modal = document.getElementById('procedureModal');
+                var modalContent = document.getElementById('modalContent');
+
+                modalContent.innerHTML = `
+                    <h2>Consulta de ${nomePac}</h2>
+                    <p>CPF: ${cpfpac}</p>
+                    <p>Procedimento: ${descProced}</p>
+                    <label for="resultado">Inserir o Resultado:</label>
+                    <input type="text" id="resultado" placeholder="Resultado" style="width: 80%;">
+                    <button onclick="submitProcedure('${nomePac}', '${cpfpac}', '${descProced}')">Concluir Consulta</button>
+                `;
+
+                modal.style.display = 'block';
+            }
+
+            function submitProcedure(nomePac, cpfpac, descProced) {
+                var result = document.getElementById('resultado').value;
+
+                createPDF(nomePac, cpfpac, descProced, result);
+
+                var modal = document.getElementById('procedureModal');
+                modal.style.display = 'none';
+            }
+
+            function createPDF(nomePac, cpfpac, descProced, result) {
+                var pdf = new jsPDF();
+                pdf.text(`Consulta de ${nomePac}`, 20, 20);
+                pdf.text(`CPF: ${cpfpac}`, 20, 30);
+                pdf.text(`Procedimento: ${descProced}`, 20, 40);
+                pdf.text(`Resultado: ${result}`, 20, 50);
+                pdf.save(`Consulta_${nomePac}.pdf`);
+            }
+
+            loadUserData();
+        </script>
+    </div>
+</body>
+</html>
