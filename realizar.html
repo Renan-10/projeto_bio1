@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realizar Procedimentos</title>
+    <div id="success-message" style="display: none; color: #28a745; text-align: center; margin-top: 10px;">
+        Procedimento realizado com sucesso!
+    </div>
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+
+        header {
+            background-color: #047a00;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+
+        section {
+            max-width: 400px;
+            margin: 2em auto;
+            background-color: #ffffff;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5em;
+            color: #007BFF;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.7em;
+            margin-bottom: 1em;
+            box-sizing: border-box;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 0.7em 1em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #00b31e;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Realizar Procedimentos</h1>
+    </header>
+
+    <section>
+        <form action="#" method="post">
+            <label for="cdf">Código do Paciente:</label>
+            <input type="text" id="cdf" name="cdf" maxlength="5" required>
+
+            <label for="procedureName">Nome do Procedimento:</label>
+            <input type="text" id="procedureName" name="procedureName" required>
+
+            <label for="procedureType">Tipo de Procedimento:</label>
+            <select id="procedureType" name="procedureType" required>
+                <option value="checkup">Check-up</option>
+                <option value="tratamento">Tratamento</option>
+                <option value="cirurgia">Cirurgia</option>
+            </select>
+
+            <label for="procedureDate">Data do Procedimento:</label>
+            <input type="date" id="procedureDate" name="procedureDate" required>
+
+            <label for="doctor">Médico Responsável:</label>
+            <input type="text" id="doctor" name="doctor" required>
+
+            <label for="procedureDescription">Descrição do Procedimento:</label>
+            <textarea id="procedureDescription" name="procedureDescription" rows="4" required></textarea>
+
+            <label for="procedureResult">Resultado do Procedimento:</label>
+            <select id="procedureResult" name="procedureResult" required>
+                <option value="normal">Normal</option>
+                <option value="anormal">Anormal</option>
+                <option value="inconclusivo">Inconclusivo</option>
+            </select>
+
+            <label for="observations">Observações:</label>
+            <textarea id="observations" name="observations" rows="4"></textarea>
+<BR>
+    <button type="button" onclick="realizarProcedimento()">Realizar Procedimento</button>
+    <button type="button" onclick="gerarRelatorio()">Gerar Relatório</button>
+
+</BR>
+        </form>
+    </section>
+    <script>
+        function realizarProcedimento() {
+            // Lógica para realizar o procedimento (pode ser adicionada aqui)
+    
+            // Exibir a mensagem de sucesso
+            document.getElementById("success-message").style.display = "block";
+        }
+    
+        function gerarRelatorio() {
+            // Redirecionar para a página de gerar relatório
+            window.location.href = "gerar.html";
+        }
+    </script>
+    
+</body>
+</html>

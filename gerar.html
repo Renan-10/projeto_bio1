@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar relatório - Fasiclin</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+        body {
+            background-image: url("backgrounfsp.jpg");
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; 
+            margin: 0;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px; 
+            width: 300; 
+            text-align: center;
+        }
+
+        h1 {
+            color: rgb(4, 122, 40);
+            text-align: center;
+            font-size: bold;
+            font-family: sans-serif;
+        }
+
+        p {
+            color: rgb(0, 0, 0);
+            text-align: center;
+        }
+
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 30px;
+            gap: 5px;
+            background: var(--primary-color, #033522);
+            cursor: pointer;
+            color: var(--text-color, #ffffff);
+            text-align: center;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-radius: 10px;
+            border: transparent;
+        }
+
+        .input-group {
+            margin: 0 auto;
+            max-width: 300px;
+        }
+
+        #generate-pdf {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div id="content">
+            <h1>Relatório de Procedimentos</h1>
+            <p>Este será o conteúdo do PDF!</p>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Opções</label>
+            </div>
+            <select class="custom-select" id="inputGroupSelect01">
+                <option selected>Escolher...</option>
+                <option value="1">Análises Clínicas</option>
+                <option value="2">Banco de sangue</option>
+                <option value="3">Biologia Molecular</option>
+                <option value="4">Citologia Oncótica</option>
+                <option value="5">Imagenologia</option>
+                <option value="6">Reprodução Humana</option>
+                <option value="7">Microbiologia</option>
+            </select>
+        </div>
+        <button id="generate-pdf">Gerar relatório</button>
+    </div>
+</body>
+</html>
